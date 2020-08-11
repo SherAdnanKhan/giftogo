@@ -1,0 +1,22 @@
+{
+  "name": "giftogo-backend",
+  "version": "1.0.0",
+  "main": "app.js",
+  "repository": "git@github.com:giftogo/giftogo.git",
+  "author": "Khurram Qureshi",
+  "license": "ISC",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.6.1",
+    "http-errors": "^1.8.0",
+    "jsonwebtoken": "^8.5.1"
+  }
+}
