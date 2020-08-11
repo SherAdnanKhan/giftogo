@@ -16,6 +16,7 @@ app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 const model = require("./models");
+app.use(require('./routes/auth.routes'));
 
 app.use(function(req, res, next) {
   next(createError(404))
@@ -23,7 +24,7 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function (err, req, res, _next) {
-  console.log("===ERORR====", err);
+  console.log("ERROR: ", err);
   res
     .status(err.status || 500)
     .send({ error: err.message ? err.message : "internal server error" });
