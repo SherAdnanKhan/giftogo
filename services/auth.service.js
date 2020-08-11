@@ -13,48 +13,74 @@ const shopify = new Shopify({
   password: process.env.SHOPIFY_API_PASS,
 });
 
-// create new user
-const createUser = async (_user) => {
-  try {
-    const { email, password, password2 } = _user;
-    //  Check if user exists
-    let user = await User.findAll({ where: { email }, limit: 1 });
-    if (user.length) {
-      throw new error("User already exists", 400);
-    }
-    // Check if passwords are same
-    if (password !== password2) {
-      throw new error("Password does not match.", 400);
-    }
-    //   creating new user
-    user = await User.create;
-    userBody = {
-      email,
-      password,
-    };
-    //  Encrypt Password
-    const salt = await bcrypt.genSalt(10);
-    userBody.password = await bcrypt.hash(password, salt);
-    // Save user to Database
-    user = await User.create(userBody);
-
-    // create shopify customer
-    const createdCustomer = await shopify.customer.create(_user);
-    console.log("shopify createdCustomer", createdCustomer);
-
-    //  Send jsonwebtoken
-    const payload = {
-      user: {
-        id: user.dataValues.id,
-      },
-    };
-    const token = jwt.sign(payload, APP_SECRET, { expiresIn: 36000 });
-    return token;
-  } catch (e) {
-    throw new error(e.message, 500);
+// login user service
+const loginUser = async (_user) => {
+  const { email, password } = _user;
+  //  Check if user exists
+  let user = await User.findAll({ where: { email }, limit: 1 });
+  if (!user.length) {
+    throw new error("Invalid Credentials", 400);
   }
+  const isMatch = await bcrypt.compare(password, user[0].dataValues.password);
+  if (!isMatch) {
+    throw new error("Invalid Credentials", 400);
+  }
+  //  Send jsonwebtoken
+  const payload = {
+    user: {
+      id: user[0].dataValues.id,
+    },
+  };
+  const token = jwt.sign(payload, APP_SECRET, { expiresIn: 36000 });
+  return token;
+};
+
+// create new user service
+const createUser = async (_user) => {
+  const {
+    first_name,
+    last_name,
+    email,
+    password,
+    password_confirmation,
+  } = _user;
+  //  Check if user exists
+  let user = await User.findAll({ where: { email }, limit: 1 });
+  if (user.length) {
+    throw new error("User already exists", 400);
+  }
+  // Check if passwords are same
+  if (password !== password_confirmation) {
+    throw new error("Password does not match.", 400);
+  }
+  const userBody = {
+    first_name,
+    last_name,
+    email,
+    password,
+  };
+  //  Encrypt Password
+  const salt = await bcrypt.genSalt(10);
+  userBody.password = await bcrypt.hash(password, salt);
+  // Save user to Database
+  user = await User.create(userBody);
+
+  // create shopify customer
+  const customer = { customer: _user };
+  const shopifyCustomer = await shopify.customer.create(customer);
+  console.log("shopify createdCustomer", shopifyCustomer);
+
+  //   //  Send jsonwebtoken
+  const payload = {
+    user: {
+      id: user.dataValues.id,
+    },
+  };
+  const token = jwt.sign(payload, APP_SECRET, { expiresIn: 36000 });
+  return token;
 };
 
 module.exports = {
   createUser,
+  loginUser,
 };
