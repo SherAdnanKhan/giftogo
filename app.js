@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const model = require("./models");
 
 app.use(require('./routes/auth.routes'));
-app.use(require('./routes/product.routes'));
+app.use(require('./routes/products.routes'));
 
 app.use(function(req, res, next) {
   next(createError(404))
