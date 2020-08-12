@@ -1,4 +1,5 @@
 const shopify = require("../lib/shopify");
+const paginate = require("../util/paginate.util");
 
 const { error } = require("../errors");
 
@@ -16,16 +17,19 @@ const getProductById = async (productId) => {
 
 // fetch products list
 const productsList = async (params) => {
+  const { limit = 10, page = 1 } = params;
+  let listParams = { limit: 250 },
+    productList = [];
   try {
-    params.limit = params.limit ? params.limit : 10;
     const count = await shopify.product.count();
-    const products = await shopify.product.list(params);
-    return {
-      count,
-      products,
-      next: products.nextPageParameters,
-      previous: products.previousPageParameters,
-    };
+    do {
+      const shopifyProducts = await shopify.product.list(listParams);
+      productList = [...productList, ...shopifyProducts];
+      listParams = shopifyProducts.nextPageParameters;
+    } while (listParams !== undefined);
+    console.log("shopify products list ", productList);
+    const products = paginate(productList, limit, page);
+    return { count, products };
   } catch (e) {
     console.log(e);
     throw new error(e.message, 500);
@@ -34,5 +38,5 @@ const productsList = async (params) => {
 
 module.exports = {
   getProductById,
-  productsList
+  productsList,
 };
