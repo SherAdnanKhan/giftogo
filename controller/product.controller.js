@@ -21,7 +21,18 @@ const getAll = async (req, res) => {
   }
 };
 
+const list = async (req, res) => {
+  try {
+    const products = await productService.productsList(req.body);
+    res.status(200).json(products);
+  } catch (e) {
+    console.log(e.message);
+    res.status(e.status).json({ errors: e.data });
+  }
+};
+
 module.exports = {
   get,
   getAll,
+  list,
 };

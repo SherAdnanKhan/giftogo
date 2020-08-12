@@ -17,10 +17,25 @@ const getProductById = async (productId) => {
 // fetch all products
 const getAllProducts = async () => {
   try {
-    const params = { limit: 10 };
-    const products = await shopify.product.list(params);
+    const products = await shopify.product.list();
     console.log("shopify products list", products);
     return products;
+  } catch (e) {
+    console.log(e);
+    throw new error(e.message, 500);
+  }
+};
+
+// fetch products list
+const productsList = async (params) => {
+  try {
+    params.limit = params.limit ? params.limit : 10;
+    const products = await shopify.product.list(params);
+    return {
+      products,
+      next: products.nextPageParameters,
+      previous: products.previousPageParameters,
+    };
   } catch (e) {
     console.log(e);
     throw new error(e.message, 500);
@@ -30,4 +45,5 @@ const getAllProducts = async () => {
 module.exports = {
   getProductById,
   getAllProducts,
+  productsList
 };
