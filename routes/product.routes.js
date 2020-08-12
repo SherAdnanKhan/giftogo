@@ -6,6 +6,5 @@ const product = require("../controller/product.controller");
 proudctRouter.post("/product", product.list);
 
 proudctRouter.get("/product/:id", product.get);
-proudctRouter.get("/product", product.getAll);
 
 module.exports = proudctRouter;

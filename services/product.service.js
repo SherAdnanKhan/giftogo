@@ -14,18 +14,6 @@ const getProductById = async (productId) => {
   }
 };
 
-// fetch all products
-const getAllProducts = async () => {
-  try {
-    const products = await shopify.product.list();
-    console.log("shopify products list", products);
-    return products;
-  } catch (e) {
-    console.log(e);
-    throw new error(e.message, 500);
-  }
-};
-
 // fetch products list
 const productsList = async (params) => {
   try {
@@ -44,6 +32,5 @@ const productsList = async (params) => {
 
 module.exports = {
   getProductById,
-  getAllProducts,
   productsList
 };
