@@ -16,10 +16,7 @@ const newUser = async (req) => {
   await check("password", "Password must be 6 or more characters long")
     .isLength({ min: 6 })
     .run(req);
-  await check(
-    "password_confirmation",
-    "Password must be 6 or more characters long"
-  )
+  await check("password_confirmation", "Password must be 6 or more characters long")
     .isLength({ min: 6 })
     .run(req);
 

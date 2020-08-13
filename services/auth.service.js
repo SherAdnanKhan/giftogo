@@ -32,13 +32,7 @@ const loginUser = async (_user) => {
 
 // create new user service
 const createUser = async (_user) => {
-  const {
-    first_name,
-    last_name,
-    email,
-    password,
-    password_confirmation,
-  } = _user;
+  const { first_name, last_name, email, password, password_confirmation } = _user;
   //  Check if user exists
   let user = await User.findAll({ where: { email }, limit: 1 });
   if (user.length) {
@@ -61,7 +55,9 @@ const createUser = async (_user) => {
   user = await User.create(userBody);
 
   // create shopify customer
-  const customer = { customer: _user };
+  const customer = {
+    customer: _user,
+  };
   const shopifyCustomer = await shopify.customer.create(customer);
   console.log("shopify createdCustomer", shopifyCustomer);
 
