@@ -1,17 +1,12 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const Shopify = require("shopify-api-node");
 
 const { APP_SECRET } = process.env;
 
+const shopify = require("../lib/shopify");
+
 const { User } = require("../models");
 const { error } = require("../errors");
-
-const shopify = new Shopify({
-  shopName: process.env.SHOPIFY_SHOP_NAME,
-  apiKey: process.env.SHOPIFY_API_KEY,
-  password: process.env.SHOPIFY_API_PASS,
-});
 
 // login user service
 const loginUser = async (_user) => {
