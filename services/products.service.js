@@ -7,7 +7,6 @@ const { error } = require("../errors");
 const getProductById = async (productId) => {
   try {
     const product = await shopify.product.get(productId);
-    console.log("shopify product", product);
     return product;
   } catch (e) {
     console.log(e);
@@ -27,7 +26,6 @@ const productsList = async (params) => {
       productList = [...productList, ...shopifyProducts];
       listParams = shopifyProducts.nextPageParameters;
     } while (listParams !== undefined);
-    console.log("shopify products list ", productList);
     const products = paginate(productList, limit, page);
     return { count, products };
   } catch (e) {

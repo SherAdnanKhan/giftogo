@@ -19,6 +19,7 @@ const model = require("./models");
 
 app.use(require("./routes/auth.routes"));
 app.use(require("./routes/products.routes"));
+app.use(require("./routes/wishlists.routes"));
 
 app.use(function (req, res, next) {
   next(createError(404));
