@@ -36,11 +36,11 @@ const createUser = async (_user) => {
   //  Check if user exists
   let user = await User.findAll({ where: { email }, limit: 1 });
   if (user.length) {
-    throw new error("User already exists", 400);
+    throw { message: "User already exists", status: 400 };
   }
   // Check if passwords are same
   if (password !== password_confirmation) {
-    throw new error("Password does not match.", 400);
+    throw ("Password does not match.", 400);
   }
   const userBody = {
     first_name,

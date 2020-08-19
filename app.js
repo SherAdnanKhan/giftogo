@@ -4,7 +4,7 @@ const logger = require("morgan");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const createError = require("http-errors");
-const port = parseInt(process.env.PORT, 10) || 8080;
+const port = parseInt(process.env.PORT, 10) || 8000;
 
 // Set up the express app
 const app = express();
@@ -20,6 +20,7 @@ const model = require("./models");
 app.use(require("./routes/auth.routes"));
 app.use(require("./routes/products.routes"));
 app.use(require("./routes/wishlists.routes"));
+app.use(require("./routes/meta.routes"));
 
 app.use(function (req, res, next) {
   next(createError(404));
