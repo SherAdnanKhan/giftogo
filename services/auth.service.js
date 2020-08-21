@@ -32,43 +32,20 @@ const loginUser = async (_user) => {
 
 // create new user service
 const createUser = async (_user) => {
-  const { first_name, last_name, email, password, password_confirmation } = _user;
-  //  Check if user exists
-  let user = await User.findAll({ where: { email }, limit: 1 });
-  if (user.length) {
-    throw { message: "User already exists", status: 400 };
+  try {
+    // const metaFieldList = await shopify.metafield.list({
+    //   metafield: { owner_resource: 'customers', owner_id: 3237975687202 },
+    // });
+    // console.log(metaFieldList);
+    const shopifyCustomer = await shopify.customer.create(_user);
+    console.log("shopify createdCustomer", shopifyCustomer);
+    console.log("shopify createdCustomer Id", shopifyCustomer.id);
+    return { message: "Customer created", response: shopifyCustomer, status: 200 };
+  } catch (e) {
+    console.log(e);
+    throw new error(e.message, 405);
   }
-  // Check if passwords are same
-  if (password !== password_confirmation) {
-    throw ("Password does not match.", 400);
-  }
-  const userBody = {
-    first_name,
-    last_name,
-    email,
-    password,
-  };
-  //  Encrypt Password
-  const salt = await bcrypt.genSalt(10);
-  userBody.password = await bcrypt.hash(password, salt);
-  // Save user to Database
-  user = await User.create(userBody);
-
-  // create shopify customer
-  const customer = {
-    customer: _user,
-  };
-  const shopifyCustomer = await shopify.customer.create(customer);
-  console.log("shopify createdCustomer", shopifyCustomer);
-
-  //   //  Send jsonwebtoken
-  const payload = {
-    user: {
-      id: user.dataValues.id,
-    },
-  };
-  const token = jwt.sign(payload, APP_SECRET, { expiresIn: 36000 });
-  return token;
+  return { message: "Customer created", status: 400 };
 };
 
 module.exports = {

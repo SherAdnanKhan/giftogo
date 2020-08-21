@@ -36,7 +36,7 @@ const genericMeta = async function (request) {
             key,
             value: JSON.stringify(key_data),
             value_type: "json_string",
-            namespace: "cutomers",
+            namespace: "customers",
             owner_resource: "customer",
             owner_id: customerId,
           });
@@ -53,7 +53,7 @@ const genericMeta = async function (request) {
                 key,
                 value: JSON.stringify(value),
                 value_type: "json_string",
-                namespace: "cutomers",
+                namespace: "customers",
                 owner_resource: "customer",
                 owner_id: customerId,
               });
@@ -72,7 +72,7 @@ const genericMeta = async function (request) {
                 key,
                 value: JSON.stringify(parsedData),
                 value_type: "json_string",
-                namespace: "cutomers",
+                namespace: "customers",
                 owner_resource: "customer",
                 owner_id: customerId,
               });
