@@ -9,18 +9,20 @@ const port = parseInt(process.env.PORT, 10) || 8000;
 // Set up the express app
 const app = express();
 app.use(cors());
+
 // Log requests to the console.
 app.use(logger("dev"));
 
 // Parse incoming requests data (https://github.com/expressjs/body-parser)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-const model = require("./models");
 
+// const model = require("./models");
 app.use(require("./routes/auth.routes"));
 app.use(require("./routes/products.routes"));
 app.use(require("./routes/wishlists.routes"));
 app.use(require("./routes/meta.routes"));
+app.use(require("./routes/order.routes"));
 
 app.use(function (req, res, next) {
   next(createError(404));
@@ -33,14 +35,16 @@ app.use(function (err, req, res, _next) {
     .status(err.status || 500)
     .send({ error: err.message ? err.message : "internal server error" });
 });
-
-model.sequelize
-  .sync({
-    force: false,
-    //alter: true // please do not remove this alter
-  })
-  .then(() => {
-    app.listen(port, () => {
-      console.log(`Server started on ${port}`);
-    });
-  });
+app.listen(port, () => {
+  console.log(`Server started on ${port}`);
+});
+// model.sequelize
+//   .sync({
+//     force: false,
+//     //alter: true // please do not remove this alter
+//   })
+//   .then(() => {
+//     app.listen(port, () => {
+//       console.log(`Server started on ${port}`);
+//     });
+//   });
