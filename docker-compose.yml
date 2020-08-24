@@ -1,0 +1,38 @@
+version: '3.3'
+# volumes: 
+#   giftogo-data-dir:
+#     driver: local
+#     driver_opts: 
+#       o: bind
+#       type: none
+#       device: /home/sarah/projects/giftogo_dock_data
+services:
+  # pg:
+  #   image: "postgres:12"
+  #   container_name: "postgres"
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - giftogo-data-dir:/var/lib/postgresql/data
+  #   environment:
+  #     POSTGRES_USER: "postgres_user"
+  #     POSTGRES_PASSWORD: "postgres"
+  #     POSTGRES_DB: "dockgiftogo"
+
+  giftogo:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/giftogo-app
+    environment:
+      DB_DIALECT: "postgres"
+      DB_HOST: "pg"
+      DB_USER: "postgres_user"
+      DB_PASS: "postgres"
+      DB_PORT: "5432"
+      DB_DATABASE: "dockgiftogo"
+    ports:
+      - "8010:8010"
+    # depends_on: 
+    #   - pg
