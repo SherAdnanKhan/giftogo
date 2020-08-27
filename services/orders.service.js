@@ -1,5 +1,4 @@
 const shopify = require("../lib/shopify");
-
 const { error } = require("../errors");
 
 const getOrderById = async (orderId) => {
@@ -11,6 +10,7 @@ const getOrderById = async (orderId) => {
     throw new error(e.message, 500);
   }
 };
+
 
 module.exports = {
   getOrderById,
