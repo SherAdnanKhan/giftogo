@@ -1,5 +1,6 @@
 const shopify = require("../lib/shopify");
 const paginate = require("../util/paginate.util");
+const https = require('https');
 
 const { error } = require("../errors");
 
@@ -34,7 +35,20 @@ const productsList = async (params) => {
   }
 };
 
+const getProductMetas = async (productId) => {
+  try {
+    const metaFieldList = await shopify.metafield.list({
+      metafield: { owner_resource: 'products', owner_id: productId },
+    });
+    return metaFieldList;
+  } catch (e) {
+    console.log(e);
+    throw new error(e.message, 500);
+  }
+}
+
 module.exports = {
   getProductById,
   productsList,
+  getProductMetas
 };
