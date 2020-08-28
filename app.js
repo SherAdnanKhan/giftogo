@@ -17,12 +17,13 @@ app.use(logger("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// const model = require("./models");
+const model = require("./models");
 app.use(require("./routes/auth.routes"));
 app.use(require("./routes/products.routes"));
 app.use(require("./routes/wishlists.routes"));
 app.use(require("./routes/meta.routes"));
 app.use(require("./routes/order.routes"));
+app.use(require("./routes/vendor.routes"));
 
 app.use(function (req, res, next) {
   next(createError(404));
@@ -35,16 +36,16 @@ app.use(function (err, req, res, _next) {
     .status(err.status || 500)
     .send({ error: err.message ? err.message : "internal server error" });
 });
-app.listen(port, () => {
-  console.log(`Server started on ${port}`);
-});
-// model.sequelize
-//   .sync({
-//     force: false,
-//     //alter: true // please do not remove this alter
-//   })
-//   .then(() => {
-//     app.listen(port, () => {
-//       console.log(`Server started on ${port}`);
-//     });
-//   });
+// app.listen(port, () => {
+//   console.log(`Server started on ${port}`);
+// });
+model.sequelize
+  .sync({
+    force: false,
+    //alter: true // please do not remove this alter
+  })
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`Server started on ${port}`);
+    });
+  });
