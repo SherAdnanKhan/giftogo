@@ -6,6 +6,7 @@ const masking = async (req, res) => {
   try {
     const { id } = req.params;
     let barcodes = [];
+    let brand_code = null;
     const order = await orderService.getOrderById(id);
     const line_items = order.line_items;
     for (line_item of line_items) {
@@ -17,15 +18,16 @@ const masking = async (req, res) => {
           const have_brand = await giftbitService.getBrand(metafield.value);
           if (have_brand) {
             barcodes.push(metafield.value);
+            brand_code = metafield.value;
           }
           console.log(barcodes);
         }
       }
     }
 
-    const campaign = await giftbitService.generateCampaignOrder(order, barcodes);
+    const campaign = await giftbitService.generateCampaignOrder(order, brand_code);
     if (campaign) {
-
+      console.log(campaign);
     }
     res.status(200).json(order);
     // Promise.all(promises).then(getcode => {

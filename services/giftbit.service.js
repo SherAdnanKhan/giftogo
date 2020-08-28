@@ -7,25 +7,16 @@ const instance = axios.create({
   headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GIFT_BIT_API_TOKEN}` }
 });
 
-const generateCampaignOrder = async (order, brand_codes) => {
+const generateCampaignOrder = async (order, brand_code) => {
   try {
     const postData = {
-      "gift_template": "VNPFTKDATSFZ",
-      "contacts": [
-        {
-          "firstname": "Khurram",
-          "lastname": "Johnson",
-          "email": "khurram@giftbit.co"
-        },
-      ],
-      "price_in_cents": 5000,
-      "brand_codes": brand_codes,
-      "expiry": "2020-11-01",
-      "id": "111"
+      "price_in_cents": 2500,
+      "brand_code": brand_code,
+      "id": "121"
     }
-    await instance.post('campaign', postData)
+    await instance.post('embedded', postData)
       .then(function (response) {
-        //console.log(response);
+        console.log(response);
         return response;
 
       })
