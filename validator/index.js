@@ -27,10 +27,10 @@ const newUser = async (req) => {
 };
 
 const newVendor = async (req) => {
-  await check("company_name", "Email is required").run(req);
+  await check("company_name", "Company name is required").isLength({ max: 30 }).run(req);
   await check("email", "Email is required").isEmail().run(req);
-  await check("password", "Password must be 6 or more characters long")
-    .isLength({ min: 6 })
+  await check("password", "Password must be 6 or 10 characters long")
+    .isLength({ min: 6, max: 10 })
     .run(req);
 
   const errors = validationResult(req);
