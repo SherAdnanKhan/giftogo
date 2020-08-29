@@ -35,10 +35,19 @@ const createVendor = async (_vendor) => {
   const { email, password, company_name, website, address_line, apartment, city, province, zip_code, country, phone } = _vendor;
   try {
     let vendor = await Vendor.findAll({ where: { email }, limit: 1 });
-    console.log(vendor.length);
+    let company_check = await Vendor.findOne({ where: { company_name } });
+    let website_check = await Vendor.findOne({ where: { website } });
     if (vendor.length) {
       // throw new error("Vendor Already exists", 400);
       return { message: "Vendor Already exists", response: [], status: 400 };
+    }
+    if (company_check) {
+      // throw new error("Vendor Already exists", 400);
+      return { message: "Please change the company name company is already exists", response: [], status: 400 };
+    }
+    if (website_check) {
+      // throw new error("Vendor Already exists", 400);
+      return { message: "Please change the company website is already exists", response: [], status: 400 };
     }
     const shopifyCollection = await shopify.customCollection.create({ 'title': company_name });
     if (shopifyCollection && shopifyCollection.id) {
