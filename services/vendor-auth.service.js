@@ -27,7 +27,7 @@ const loginVendor = async (_vendor) => {
     },
   };
   const token = jwt.sign(payload, APP_SECRET, { expiresIn: 36000 });
-  return { message: "Vendor login", response: { token, vendor_id: vendor.dataValues.id }, status: 400 };
+  return { message: "Vendor login", response: { token, vendor: vendor }, status: 200 };
 };
 
 // create new user service

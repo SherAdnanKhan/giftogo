@@ -1,4 +1,5 @@
 const productService = require("../services/products.service");
+const { tokenValidation } = require("../validator/token");
 
 const get = async (req, res) => {
   try {
@@ -21,7 +22,20 @@ const list = async (req, res) => {
   }
 };
 
+const add = async (req, res) => {
+  const vendor_id = await tokenValidation(req, res);
+  try {
+    const product = await productService.addProduct(vendor_id, req.body);
+    res.status(200).json(product);
+  } catch (e) {
+    console.log(e.message);
+    res.status(e.status).json({ errors: e.data });
+  }
+}
+
+
 module.exports = {
   get,
   list,
+  add
 };

@@ -46,9 +46,20 @@ const getProductMetas = async (productId) => {
     throw new error(e.message, 500);
   }
 }
+const addProduct = async (_vendor_id, _product) => {
+  try {
+    const product = await shopify.product.create(_product);
+    return product;
+
+  } catch (e) {
+    console.log(e);
+    throw new error(e.message, 500);
+  }
+}
 
 module.exports = {
   getProductById,
   productsList,
-  getProductMetas
+  getProductMetas,
+  addProduct
 };
