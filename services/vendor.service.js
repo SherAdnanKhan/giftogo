@@ -84,9 +84,52 @@ const getMyProducts = async (id, params) => {
       listParams = shopifyProducts.nextPageParameters;
     } while (listParams !== undefined);
     const products = paginate(productList, limit, page);
-    //return { count, products };
     return {
       message: "Vendor Posts", response: { count, products }, status: 200
+    }
+  } catch (e) {
+    console.log(e);
+    return { message: "Vendor could not get Prducts! please reload", response: [], status: 400 }
+  }
+}
+
+const getMyPayouts = async (id, params) => {
+  const vendor = await Vendor.findOne({ where: { id } });
+  let product_ids = [], order_products = [];
+  if (!vendor) {
+    return { message: "No vendor exists", response: [], status: 400 }
+  }
+  //const collection_id = vendor.shopify_collection_id;
+  const collection_id = 175982575650;
+  try {
+    const productList = await shopify.product.list({ collection_id });
+    for (product of productList) {
+      product_ids.push(product.id);
+    }
+    const orders = await shopify.order.list();
+    for (order of orders) {
+      for (line_item of order.line_items) {
+        if (product_ids.indexOf(line_item.product_id) !== -1) {
+          let sales = parseFloat(line_item.price) - parseFloat(line_item.total_discount);
+          order_products.push({
+            "payout_date": order.processed_at,
+            "status": order.financial_status,
+            "fulfillments": order.fulfillments,
+            "cancelled_at": order.cancelled_at,
+            "cancel_reason": order.cancel_reason,
+            'sales': sales,
+            'refund': null,
+            'price': line_item.price,
+            'discount': line_item.total_discount,
+            'balance': sales
+          });
+        }
+
+      }
+    }
+
+    return {
+      message: "Vendor Posts", response: { order_products }, status: 200
     }
   } catch (e) {
     console.log(e);
@@ -99,5 +142,6 @@ module.exports = {
   getVendorById,
   updateVendorById,
   updateLogo,
-  getMyProducts
+  getMyProducts,
+  getMyPayouts
 };
