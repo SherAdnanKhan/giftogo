@@ -49,7 +49,9 @@ const getProductMetas = async (productId) => {
 const addProduct = async (_vendor_id, _product) => {
   try {
     const product = await shopify.product.create(_product);
-    return product;
+    return {
+      message: "Vendor Posts", response: product, status: 200
+    }
 
   } catch (e) {
     console.log(e);
