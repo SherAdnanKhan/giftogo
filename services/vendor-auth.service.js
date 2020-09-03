@@ -18,7 +18,7 @@ const loginVendor = async (_vendor) => {
   }
   const isMatch = await bcrypt.compare(password, vendor.dataValues.password);
   if (!isMatch) {
-    throw new error("Invalid Credentials", 400);
+    return { message: "Invalid Credentials", response: [], status: 400 };
   }
   //  Send jsonwebtoken
   const payload = {
