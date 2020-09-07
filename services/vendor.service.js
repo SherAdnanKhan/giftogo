@@ -24,13 +24,13 @@ const getVendorById = async (id) => {
 };
 
 const updateVendorById = async (id, _vendor) => {
-  const { email, password, company_name, website, address_line, apartment, city, province, zip_code, country, phone, company_desciption } = _vendor;
+  const { password, website, address_line, apartment, city, province, zip_code, country, phone, company_desciption } = _vendor;
   try {
     const vendor = await Vendor.findOne({ where: { id }, limit: 1 });
     if (!vendor) {
       return { message: "No vendor exists", response: [], status: 400 }
     }
-    if (password === vendor.password) {
+    if (password && password === vendor.password) {
       hash_password = password;
     }
     else {
@@ -39,7 +39,7 @@ const updateVendorById = async (id, _vendor) => {
     }
 
     await Vendor.update({
-      website, address_line, apartment, city, province, zip_code, country, phone, password: hash_password
+      website, address_line, apartment, city, province, zip_code, country, phone, password: hash_password, company_desciption
     }, { where: { id } });
 
     const updated_vendor = await Vendor.findOne({ where: { id }, limit: 1 });
