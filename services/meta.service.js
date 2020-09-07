@@ -21,13 +21,13 @@ const genericMeta = async function (request) {
       switch (action) {
         case "remove":
           if (!metaFieldList.length) {
-            response = { msg: "no metafield exist", result: {} };
+            response = { msg: "no metafield exist", result: {}, status: 400 };
             break;
           }
           for (data of metaFieldList) {
             if (data.key === key) {
               await shopify.metafield.delete(data.id);
-              response = { msg: `${key} deleted successfully"`, result: {} };
+              response = { msg: `${key} deleted successfully"`, result: {}, status: 200 };
             }
           }
           break;
@@ -40,11 +40,11 @@ const genericMeta = async function (request) {
             owner_resource: "customer",
             owner_id: customerId,
           });
-          response = { msg: "metafields added", result: response };
+          response = { msg: "metafields added", result: response, status: 200 };
           break;
         case "partial_add":
           if (!metaFieldList.length) {
-            response = { msg: "no metafield found to add", result: response };
+            response = { msg: "no metafield found to add", result: [], status: 400 };
           }
           for (data of metaFieldList) {
             if (data.key === key) {
@@ -57,7 +57,7 @@ const genericMeta = async function (request) {
                 owner_resource: "customer",
                 owner_id: customerId,
               });
-              response = { msg: "metafields updated", result: response };
+              response = { msg: "metafields updated", result: response, status: 200 };
             }
           }
           break;
@@ -78,13 +78,14 @@ const genericMeta = async function (request) {
               });
               response = {
                 msg: "metafields partially remove",
-                result: response,
+                result: response.body,
+                status: 200
               };
             }
           }
           break;
         default:
-          response = { msg: "please add action method", result: {} };
+          response = { msg: "please add action method", result: {}, status: 400 };
           break;
       }
     }
