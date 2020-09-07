@@ -30,8 +30,9 @@ const updateVendorById = async (id, _vendor) => {
     if (!vendor) {
       return { message: "No vendor exists", response: [], status: 400 }
     }
-    if (password && password === vendor.password) {
-      hash_password = password;
+    console.log(password.length);
+    if (password.length == 0) {
+      hash_password = vendor.password;
     }
     else {
       const salt = await bcrypt.genSalt(10);
