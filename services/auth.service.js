@@ -33,19 +33,20 @@ const loginUser = async (_user) => {
 // create new user service
 const createUser = async (_user) => {
   try {
-    // const metaFieldList = await shopify.metafield.list({
-    //   metafield: { owner_resource: 'customers', owner_id: 3237975687202 },
-    // });
-    // console.log(metaFieldList);
+    const check_customer_already = await shopify.customer.list({ email: _user.email });
+    if (check_customer_already.length > 0) {
+      return { message: "Customer already exists", response: [], status: 400 }
+    }
+
     const shopifyCustomer = await shopify.customer.create(_user);
     console.log("shopify createdCustomer", shopifyCustomer);
     console.log("shopify createdCustomer Id", shopifyCustomer.id);
     return { message: "Customer created", response: shopifyCustomer, status: 200 };
   } catch (e) {
     console.log(e);
-    throw new error(e.message, 405);
+    return { message: "Something went wrong by shopify", response: [], status: 400 }
   }
-  return { message: "Customer created", status: 400 };
+
 };
 
 module.exports = {
