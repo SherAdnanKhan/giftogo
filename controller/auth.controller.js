@@ -18,7 +18,7 @@ const loginUser = async (req, res) => {
 // create users
 const createUser = async (req, res) => {
   try {
-    //await validator.newUser(req);
+    await validator.newUser(req);
     const result = await auth.createUser(req.body);
     return res.json(result);
   } catch (e) {
