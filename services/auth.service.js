@@ -32,13 +32,51 @@ const loginUser = async (_user) => {
 
 // create new user service
 const createUser = async (_user) => {
+  const { first_name, last_name, email, password, dob, gender, refferal_code } = _user;
   try {
     const check_customer_already = await shopify.customer.list({ email: _user.email });
     if (check_customer_already.length > 0) {
       return { message: "Customer already exists", response: [], status: 400 }
     }
 
-    const shopifyCustomer = await shopify.customer.create(_user);
+    let metafields = [];
+    if (dob) {
+      metafields.push({
+        "key": "dob",
+        "value": dob,
+        "value_type": "string",
+        "namespace": "customers"
+      });
+    }
+    if (gender) {
+      metafields.push({
+        "key": "gender",
+        "value": gender,
+        "value_type": "string",
+        "namespace": "customers"
+      });
+    }
+
+    if (refferal_code) {
+      metafields.push({
+        "key": "refferalCode",
+        "value": refferal_code,
+        "value_type": "string",
+        "namespace": "customers"
+      });
+    }
+
+    const newUser = {
+      first_name,
+      last_name,
+      email,
+      password,
+      password_confirmation: password,
+      verified_email: false,
+      metafields
+    }
+
+    const shopifyCustomer = await shopify.customer.create(newUser);
     console.log("shopify createdCustomer", shopifyCustomer);
     console.log("shopify createdCustomer Id", shopifyCustomer.id);
     return { message: "Customer created", response: shopifyCustomer, status: 200 };
