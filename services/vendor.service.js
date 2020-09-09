@@ -11,7 +11,7 @@ const getVendorById = async (id) => {
       return { message: "No vendor exists", response: [], status: 400 }
     }
     const collectionId = vendor.shopify_collection_id;
-    const shopifyCollection = await shopify.customCollection.get(collectionId,);
+    const shopifyCollection = await shopify.customCollection.get(collectionId);
     data = {
       vendor,
       collection: shopifyCollection
@@ -30,7 +30,7 @@ const updateVendorById = async (id, _vendor) => {
     if (!vendor) {
       return { message: "No vendor exists", response: [], status: 400 }
     }
-    console.log(password.length);
+    const collectionId = vendor.shopify_collection_id;
     if (password.length == 0) {
       hash_password = vendor.password;
     }
@@ -42,6 +42,10 @@ const updateVendorById = async (id, _vendor) => {
     await Vendor.update({
       website, address_line, apartment, city, province, zip_code, country, phone, password: hash_password, company_desciption
     }, { where: { id } });
+
+    await shopify.customCollection.update(collectionId, {
+      "body_html": company_desciption
+    });
 
     const updated_vendor = await Vendor.findOne({ where: { id }, limit: 1 });
     return { message: "Vendor updated", response: [updated_vendor], status: 200 }
@@ -100,8 +104,8 @@ const getMyPayouts = async (id, params) => {
   if (!vendor) {
     return { message: "No vendor exists", response: [], status: 400 }
   }
-  //const collection_id = vendor.shopify_collection_id;
-  const collection_id = 175982575650;
+  const collection_id = vendor.shopify_collection_id;
+  //const collection_id = 175982575650;
   try {
     const productList = await shopify.product.list({ collection_id });
     for (product of productList) {
@@ -130,7 +134,7 @@ const getMyPayouts = async (id, params) => {
     }
 
     return {
-      message: "Vendor Posts", response: { order_products }, status: 200
+      message: "Vendor Posts", response: { order_payouts: order_products }, status: 200
     }
   } catch (e) {
     console.log(e);
