@@ -20,6 +20,9 @@ const loginVendor = async (_vendor) => {
   if (!isMatch) {
     return { message: "Invalid Credentials", response: [], status: 400 };
   }
+  const collectionId = vendor.shopify_collection_id;
+  const shopifyCollection = await shopify.customCollection.get(collectionId);
+
   //  Send jsonwebtoken
   const payload = {
     vendor: {
@@ -27,7 +30,7 @@ const loginVendor = async (_vendor) => {
     },
   };
   const token = jwt.sign(payload, APP_SECRET, { expiresIn: 36000 });
-  return { message: "Vendor login", response: { token, vendor: vendor }, status: 200 };
+  return { message: "Vendor login", response: { token, vendor: vendor, collection: shopifyCollection }, status: 200 };
 };
 
 // create new user service
