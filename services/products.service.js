@@ -58,6 +58,7 @@ const addProduct = async (_vendor_id, _product) => {
     if (!collection) {
       return { message: "Account is deleted by Shopify", response: [], status: 400 };
     }
+    console.log(description);
     const product_data = {
       title,
       body_html: description,
@@ -69,7 +70,7 @@ const addProduct = async (_vendor_id, _product) => {
     }
 
     console.log(product_data);
-    const product = await shopify.product.create(_product);
+    const product = await shopify.product.create(product_data);
     const variant = product.variants[0];
     //console.log(variant)
     //add collection 
