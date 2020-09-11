@@ -36,7 +36,7 @@ const createUser = async (_user) => {
   try {
     const check_customer_already = await shopify.customer.list({ email: _user.email });
     if (check_customer_already.length > 0) {
-      return { message: "Customer already exists", response: [], status: 400 }
+      return { message: "Email already exists", response: [], status: 400 }
     }
 
     let metafields = [];
