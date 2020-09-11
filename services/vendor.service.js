@@ -27,13 +27,17 @@ const updateVendorById = async (id, _vendor) => {
   const { password, website, address_line, apartment, city, province, zip_code, country, phone, company_desciption } = _vendor;
   try {
     const vendor = await Vendor.findOne({ where: { id }, limit: 1 });
-    // let website_check = await Vendor.findOne({ where: { website } });
+    let website_check = await Vendor.findOne({ where: { website } });
     if (!vendor) {
       return { message: "No vendor exists", response: [], status: 400 }
     }
-    // if (website_check) {
-    //   return { message: "Website is already exists", response: [], status: 400 };
-    // }
+    
+    // console.log(website_check.id!==id);
+    if (website_check) {
+      if(website_check.id!==id){
+        return { message: "Website is already exists", response: [], status: 400 };
+      } 
+    }
     const collectionId = vendor.shopify_collection_id;
     if (password.length == 0) {
       hash_password = vendor.password;
