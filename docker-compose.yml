@@ -5,7 +5,7 @@ volumes:
     driver_opts: 
       o: bind
       type: none
-      device: /home/sarah/projects/giftogo_dock_data
+      device: /Users/bruger/drives/giftogo-postgres
 services:
   pg:
     image: "postgres:12"
@@ -15,7 +15,7 @@ services:
     volumes:
       - giftogo-data-dir:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: "postgres_user"
+      POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "postgres"
       POSTGRES_DB: "dockgiftogo"
 
@@ -28,11 +28,11 @@ services:
     environment:
       DB_DIALECT: "postgres"
       DB_HOST: "pg"
-      DB_USER: "postgres_user"
+      DB_USER: "postgres"
       DB_PASS: "postgres"
       DB_PORT: "5432"
       DB_DATABASE: "dockgiftogo"
     ports:
-      - "8010:8010"
+      - "8005:8005"
     depends_on: 
       - pg
