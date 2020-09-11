@@ -2,10 +2,13 @@ require("dotenv").config();
 const express = require("express");
 const logger = require("morgan");
 const bodyParser = require("body-parser");
+const fs = require('fs');
+const cron = require("node-cron");
 const cors = require("cors");
 const createError = require("http-errors");
 const port = parseInt(process.env.PORT, 10) || 8000;
-
+const emailscraper =require('./cronjobs/emailScraper');
+const processImage=require('./cronjobs/processImage');
 // Set up the express app
 const app = express();
 app.use(cors());
@@ -13,11 +16,39 @@ app.use(cors());
 // Log requests to the console.
 app.use(logger("dev"));
 
+let date_ob = new Date();
+let hours = date_ob.getHours();
+let minutes = date_ob.getMinutes();
+let seconds = date_ob.getSeconds();
+
+// console.log("Schedule a task on"+hours+minutes+seconds);
+// const pathToFile = './emailScrapedImages/Image4472.png';
+
+// fs.unlink(pathToFile, function(err) {
+//   if (err) {
+//     throw err
+//   } else {
+//     console.log("Successfully deleted the file.")
+//   }
+// })
+
+// cron.schedule("00 */1 * * * *", function() {
+//   console.log("Cron job perform a task on"+hours+minutes+seconds);
+//   emailscraper.gettokenurl();
+  
+// });
+
+
+
+
+
+
 // Parse incoming requests data (https://github.com/expressjs/body-parser)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 const model = require("./models");
+const { auth } = require("googleapis/build/src/apis/abusiveexperiencereport");
 app.use(require("./routes/auth.routes"));
 app.use(require("./routes/products.routes"));
 app.use(require("./routes/wishlists.routes"));
@@ -49,3 +80,5 @@ model.sequelize
       console.log(`Server started on ${port}`);
     });
   });
+
+  
