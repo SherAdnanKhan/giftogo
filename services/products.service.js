@@ -66,13 +66,22 @@ const addProduct = async (_vendor_id, _product) => {
       product_type,
       tags: vendor_check.company_name.toLowerCase(),
       vendor,
-      images
+      images,
+      variants: [
+        {
+          price: price,
+          sku: "123",
+          inventory_management: "shopify",
+          inventory_quantity: inventory
+        },
+        
+      ]
     }
 
     console.log(product_data);
     const product = await shopify.product.create(product_data);
     const variant = product.variants[0];
-    //console.log(variant)
+    console.log(variant)
     //add collection 
     const collect = await shopify.collect.create({
       product_id: product.id,
