@@ -9,6 +9,7 @@ const createError = require("http-errors");
 const port = parseInt(process.env.PORT, 10) || 8000;
 const emailscraper =require('./cronjobs/emailScraper');
 const processImage=require('./cronjobs/processImage');
+// var url = require('url');
 // Set up the express app
 const app = express();
 app.use(cors());
@@ -40,11 +41,28 @@ let seconds = date_ob.getSeconds();
 
 
 
+// var urls = [
+//     'http://domain.com:3000',
+//     'http://domain.com?pass=gas',
+//     'domain.com',
+//     'http://domain.com',
+//     'https://makecode.pk',
+//     'https://www.makecode.pk',
+//     'https://www.make.code.pk',
+// ];
+
+// for (x in urls) {
+//     console.log(url.parse(urls[x]).hostname);
+// }
+
+
 
 
 
 // Parse incoming requests data (https://github.com/expressjs/body-parser)
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '20mb'}));
+// app.use(express.json({limit: '100mb'}));
+// app.use(express.urlencoded({limit: '100mb'}));
 app.use(bodyParser.urlencoded({ extended: false }));
 
 const model = require("./models");
@@ -55,6 +73,7 @@ app.use(require("./routes/wishlists.routes"));
 app.use(require("./routes/meta.routes"));
 app.use(require("./routes/order.routes"));
 app.use(require("./routes/vendor.routes"));
+app.use(require("./routes/imageTest.routes"));
 
 app.use(function (req, res, next) {
   next(createError(404));
