@@ -31,12 +31,12 @@ const updateVendorById = async (id, _vendor) => {
     if (!vendor) {
       return { message: "No vendor exists", response: [], status: 400 }
     }
-    
+
     // console.log(website_check.id!==id);
     if (website_check) {
-      if(website_check.id!==id){
+      if (website_check.id !== id) {
         return { message: "Website is already exists", response: [], status: 400 };
-      } 
+      }
     }
     const collectionId = vendor.shopify_collection_id;
     if (password.length == 0) {
@@ -51,12 +51,12 @@ const updateVendorById = async (id, _vendor) => {
       website, address_line, apartment, city, province, zip_code, country, phone, password: hash_password, company_desciption
     }, { where: { id } });
 
-    await shopify.customCollection.update(collectionId, {
+    const collection = await shopify.customCollection.update(collectionId, {
       "body_html": company_desciption
     });
 
     const updated_vendor = await Vendor.findOne({ where: { id }, limit: 1 });
-    return { message: "Vendor updated", response: [updated_vendor], status: 200 }
+    return { message: "Vendor updated", response: { vendor: updated_vendor, collection }, status: 200 }
   } catch (e) {
     console.log(e);
     throw new error(e.message, 500);

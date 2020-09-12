@@ -29,7 +29,7 @@ const loginVendor = async (_vendor) => {
       id: vendor.dataValues.id,
     },
   };
-  const token = jwt.sign(payload, APP_SECRET, { expiresIn: 36000 });
+  const token = jwt.sign(payload, APP_SECRET);
   return { message: "Vendor login", response: { token, vendor: vendor, collection: shopifyCollection }, status: 200 };
 };
 
