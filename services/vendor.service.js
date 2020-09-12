@@ -1,3 +1,4 @@
+var url = require('url');
 const bcrypt = require("bcryptjs");
 const { Vendor } = require("../models");
 const shopify = require("../lib/shopify");
@@ -27,6 +28,9 @@ const updateVendorById = async (id, _vendor) => {
   const { password, website, address_line, apartment, city, province, zip_code, country, phone, company_desciption } = _vendor;
   try {
     const vendor = await Vendor.findOne({ where: { id }, limit: 1 });
+    var web=website.toString();
+    console.log(web);
+    console.log(url.parse(web.toString()).hostname);
     let website_check = await Vendor.findOne({ where: { website } });
     if (!vendor) {
       return { message: "No vendor exists", response: [], status: 400 }
