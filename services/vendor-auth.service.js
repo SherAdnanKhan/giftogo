@@ -7,6 +7,7 @@ const shopify = require("../lib/shopify");
 
 const { Vendor } = require("../models");
 const { error } = require("../errors");
+const smtp=require('./email.service');
 
 // login user service
 const loginVendor = async (_vendor) => {
@@ -70,7 +71,15 @@ const createVendor = async (_vendor) => {
         phone,
         shopify_collection_id: shopifyCollection.id
       });
-      return { message: "Vendor created", response: _vendor, status: 200 };
+
+      const textbody="<html><head><style>.button{background-color: #008CBA;border: none;color: white;padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;margin: 4px 2px;cursor: pointer;}.im {color: black;}</style></head>"
+      +"<body><h1>Giftogo</h1><h1>Welcome to Giftogo!</h1><p>You have activated your business account. Next time to login.</p><a class="+"button button2"+" href="+"https://giftogo.co/pages/business-login"+">Visit your store</a><hr><p>If you have any question, reply to this email or contact us at <a href="+"giftogo.inc@gmail.com"+">giftogo.inc@gmail.com</a></p></body></html>"
+
+      let emailinfo= await smtp.sendemail(textbody,email,"Giftogo Business account registration");
+
+      console.log(emailinfo);
+
+      return { message: "Vendor created ", response: _vendor, status: 200 };
     }
     console.log("shopify createdVendorCollection", shopifyCollection);
     //   console.log("shopify createdCustomer Id", shopifyCustomer.id);
