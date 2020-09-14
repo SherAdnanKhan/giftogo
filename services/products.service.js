@@ -59,6 +59,8 @@ const addProduct = async (_vendor_id, _product) => {
       return { message: "Account is deleted by Shopify", response: [], status: 400 };
     }
     console.log(description);
+    let skuid = Date.parse(new Date());
+    console.log(skuid);
     const product_data = {
       title,
       body_html: description,
@@ -70,7 +72,7 @@ const addProduct = async (_vendor_id, _product) => {
       variants: [
         {
           price: price,
-          sku: "123",
+          sku: skuid,
           inventory_management: "shopify",
           inventory_quantity: inventory
         },
@@ -80,20 +82,12 @@ const addProduct = async (_vendor_id, _product) => {
 
     console.log(product_data);
     const product = await shopify.product.create(product_data);
-    const variant = product.variants[0];
-    console.log(variant)
+
     //add collection 
     const collect = await shopify.collect.create({
       product_id: product.id,
       collection_id: parseInt(collection_id)
     })
-    //update price
-    const _variant = await shopify.productVariant.update(variant.id, {
-      price,
-    });
-    //update inventory
-    //const _inventory = await shopify.inventoryLevel.list(_variant.inventory_item_id)
-    //console.log(_inventory);
 
     const product_detail = await shopify.product.get(product.id);
     return {
