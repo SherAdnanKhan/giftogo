@@ -16,8 +16,9 @@ const getProductById = async (productId) => {
 
 // fetch products list
 const productsList = async (params) => {
-  const { limit = 10, page = 1 } = params;
-  let listParams = { limit: 250 },
+  console.log(params);
+  const { limit , page } = params;
+  let listParams = { limit:250},
     productList = [];
   try {
     const count = await shopify.product.count();

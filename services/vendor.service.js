@@ -82,6 +82,27 @@ const updateLogo = async (id, logo) => {
   }
 
 }
+function decsortByProperty(property){  
+  return function(a,b){  
+     if(a[property] < b[property])  
+        return 1;  
+     else if(a[property] > b[property])  
+        return -1;  
+ 
+     return 0;  
+  }  
+}
+
+function asssortByProperty(property){  
+  return function(a,b){  
+     if(a[property] > b[property])  
+        return 1;  
+     else if(a[property] < b[property])  
+        return -1;  
+ 
+     return 0;  
+  }  
+}
 
 const getMyProducts = async (id, params) => {
   const vendor = await Vendor.findOne({ where: { id } });
@@ -90,25 +111,31 @@ const getMyProducts = async (id, params) => {
   }
   const collection_id = vendor.shopify_collection_id;
   //const collection_id = 175982575650;
-  const { limit = 10, page = 1 } = params;
-  let listParams = { limit, collection_id }, productList = [];
+  const { limit = 10, page = 1 ,order} = params;
+  let listParams = { limit, collection_id ,order}, productList = [];
   try {
     const count_products = await shopify.product.list({ collection_id });
     const count = count_products.length;
+    const pages = Math.ceil(count/limit);
     do {
       const shopifyProducts = await shopify.product.list(listParams);
       productList = [...productList, ...shopifyProducts];
       listParams = shopifyProducts.nextPageParameters;
     } while (listParams !== undefined);
     const products = paginate(productList, limit, page);
+    products.sort(decsortByProperty("title"));
     return {
-      message: "Vendor Posts", response: { count, products }, status: 200
+      message: "Vendor Posts", response: { count, pages ,products }, status: 200
     }
   } catch (e) {
     console.log(e);
     return { message: "Vendor could not get Prducts! please reload", response: [], status: 400 }
   }
 }
+
+
+
+
 
 const getMyPayouts = async (id, params) => {
   const vendor = await Vendor.findOne({ where: { id } });

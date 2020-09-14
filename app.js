@@ -37,20 +37,11 @@ app.use(logger("dev"));
 // });
 
 
+ //sort according to pId 
+ 
+// items.sort(sortByProperty("id")); //sort according to i
 
-// var urls = [
-//     'http://domain.com:3000',
-//     'http://domain.com?pass=gas',
-//     'domain.com',
-//     'http://domain.com',
-//     'https://makecode.pk',
-//     'https://www.makecode.pk',
-//     'https://www.make.code.pk',
-// ];
-
-// for (x in urls) {
-//     console.log(url.parse(urls[x]).hostname);
-// }
+// console.log(items);
 
 
 // Parse incoming requests data (https://github.com/expressjs/body-parser)
