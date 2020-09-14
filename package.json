@@ -38,6 +38,7 @@
     "node-cron": "^2.0.3",
     "node-html-parser": "^1.2.20",
     "node-image-downloader": "^1.0.7",
+    "nodemailer": "^6.4.11",
     "open": "^7.2.1",
     "pg": "^8.3.0",
     "pg-hstore": "^2.3.3",

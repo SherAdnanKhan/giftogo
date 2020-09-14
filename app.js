@@ -56,9 +56,6 @@ let seconds = date_ob.getSeconds();
 // }
 
 
-
-
-
 // Parse incoming requests data (https://github.com/expressjs/body-parser)
 app.use(bodyParser.json({limit: '20mb'}));
 // app.use(express.json({limit: '100mb'}));
