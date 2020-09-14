@@ -13,5 +13,8 @@ authRouter.post("/user/create", auth.createUser);
 authRouter.post("/vendor/login", auth.loginVendor);
 // create vendors
 authRouter.post("/vendor/create", auth.createVendor);
+//forget vendors
+authRouter.post("/vendor/forgot",auth.forgotVendor);
+authRouter.post("/vendor/resetpass",auth.resetPasswordVendor);
 
 module.exports = authRouter;

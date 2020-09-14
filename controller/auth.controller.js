@@ -3,6 +3,7 @@ const validator = require("../validator");
 const auth = require("../services/auth.service");
 const vendor_auth = require("../services/vendor-auth.service");
 
+
 // login user
 const loginUser = async (req, res) => {
   try {
@@ -51,9 +52,32 @@ const loginVendor = async (req, res) => {
   }
 };
 
+const forgotVendor= async (req,res)=>{
+  try{   
+  const result = await vendor_auth.forgotVendor(req.body);
+  return res.json(result);
+  }catch(e){
+    console.log(e);
+    res.status(e.status).json({error: e.data});
+  }
+}
+
+
+const resetPasswordVendor= async (req,res)=>{
+  try{   
+  const result = await vendor_auth.resetPasswordVendor(req.body);
+  return res.json(result);
+  }catch(e){
+    console.log(e);
+    res.status(e.status).json({error: e.data});
+  }
+}
+
 module.exports = {
   createUser,
   loginUser,
   createVendor,
-  loginVendor
+  loginVendor,
+  forgotVendor,
+  resetPasswordVendor
 };
