@@ -82,7 +82,7 @@ const updateLogo = async (id, logo) => {
   }
 
 }
-function decsortByProperty(property){  
+ function decsortByProperty(property){  
   return function(a,b){  
      if(a[property] < b[property])  
         return 1;  
@@ -93,7 +93,7 @@ function decsortByProperty(property){
   }  
 }
 
-function asssortByProperty(property){  
+ function asssortByProperty(property){  
   return function(a,b){  
      if(a[property] > b[property])  
         return 1;  
@@ -123,7 +123,6 @@ const getMyProducts = async (id, params) => {
       listParams = shopifyProducts.nextPageParameters;
     } while (listParams !== undefined);
     const products = paginate(productList, limit, page);
-    products.sort(decsortByProperty("title"));
     return {
       message: "Vendor Posts", response: { count, pages ,products }, status: 200
     }
@@ -134,17 +133,15 @@ const getMyProducts = async (id, params) => {
 }
 
 
-
-
-
 const getMyPayouts = async (id, params) => {
   const vendor = await Vendor.findOne({ where: { id } });
   let product_ids = [], order_products = [];
   if (!vendor) {
     return { message: "No vendor exists", response: [], status: 400 }
   }
-  const collection_id = vendor.shopify_collection_id;
-  //const collection_id = 175982575650;
+  // const collection_id = vendor.shopify_collection_id;
+  // const collection_id = 175982575650;
+  const collection_id = 177438720034;
   try {
     const productList = await shopify.product.list({ collection_id });
     for (product of productList) {
@@ -172,8 +169,28 @@ const getMyPayouts = async (id, params) => {
       }
     }
 
+    const {limit,page} =params;
+    var newdata;
+    if(page==1){
+      const start=0;
+      const end=limit*page;
+      newdata=order_products.slice(start, end);
+      console.log("newdata",newdata);
+    }
+    else{
+      const start=limit*(page-1);
+      const end=limit*page;
+      newdata=order_products.slice(start, end);
+      console.log("newdata",newdata);
+    }
+    
+   
+
+
+
+
     return {
-      message: "Vendor Posts", response: { order_payouts: order_products }, status: 200
+      message: "Vendor Posts", response: { order_payouts: newdata }, status: 200
     }
   } catch (e) {
     console.log(e);

@@ -37,7 +37,7 @@ const updateLogo = async (req, res) => {
 const getProducts = async (req, res) => {
   const vendor_id = await tokenValidation(req, res);
   try {
-    const products = await vendorService.getMyProducts(vendor_id, req.body);
+    const products = await vendorService.getMyProducts(vendor_id, req.query);
     res.status(200).json(products);
   } catch (e) {
     console.log(e.message);
@@ -48,7 +48,7 @@ const getProducts = async (req, res) => {
 const getPayouts = async (req, res) => {
   const vendor_id = await tokenValidation(req, res);
   try {
-    const payouts = await vendorService.getMyPayouts(vendor_id, req.body);
+    const payouts = await vendorService.getMyPayouts(vendor_id, req.query);
     res.status(200).json(payouts);
   } catch (e) {
     console.log(e.message);
