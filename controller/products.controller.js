@@ -15,7 +15,7 @@ const get = async (req, res) => {
 
 const list = async (req, res) => {
   try {
-    const products = await productService.productsList(req.body);
+    const products = await productService.productsList(req.query);
     res.status(200).json(products);
   } catch (e) {
     console.log(e.message);
