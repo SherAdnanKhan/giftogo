@@ -142,7 +142,7 @@ const forgotVendor = async (data) => {
                             <a href="https://giftogo.co/">Giftogo</a>.
                             If you didn't request a new password, you can safely delete this email.
                           </p>
-                          <a class="button" href="">Reset your password</a>
+                          <a class="button" href="https://giftogo.co/pages/business-reset-password/?email=${email}&token=${cryptotoken}">Reset your password</a>
                             or 
                           <a href="https://giftogo.co/pages/business-login">Visit your store</a>
                         </body>
