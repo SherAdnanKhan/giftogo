@@ -11,7 +11,6 @@ const { Vendor } = require("../models");
 const { error } = require("../errors");
 const smtp = require('./email.service');
 const { realpathSync } = require("fs");
-const { sendemail } = require("./email.service");
 
 // login user service
 const loginVendor = async (_vendor) => {
@@ -41,7 +40,7 @@ const loginVendor = async (_vendor) => {
 // create new user service
 const createVendor = async (_vendor) => {
   const cryptotoken = crypto.randomBytes(16).toString('hex');
-  const { email, password, company_name, website, address_line, apartment, city, province, zip_code, country, phone } = _vendor;
+  const { email, password, company_name, website, address_line, apartment, city, province, zip_code, country, phone, business_number } = _vendor;
   try {
     let vendor = await Vendor.findAll({ where: { email }, limit: 1 });
     let company_check = await Vendor.findOne({ where: { company_name } });
@@ -67,6 +66,9 @@ const createVendor = async (_vendor) => {
         password: hash_password,
         company_name,
         website,
+        business_number,
+        verified_email: false,
+        verified_token: cryptotoken,
         address_line,
         apartment,
         city,
@@ -95,13 +97,19 @@ const createVendor = async (_vendor) => {
                               .im {
                                 color: black;
                               }
+                              .center {
+                                text-align: center;
+                              }
                             </style>
                           </head>
                           <body>
-                            <h1>Giftogo</h1>
-                            <h1>Welcome to Giftogo!</h1>
-                            <p>You have activated your business account. Next time to login.</p>
-                            <a class="button" href="https://giftogo.co/pages/business-login">Visit your store</a>
+                            <h1>Hi ${company_name}</h1>
+                            <p>Welcome to Giftogo!</p>
+                            <p>You have successfully created your Giftogo account!</p>
+                            <p>You’re one click away from being able to tap into our smartest gifting platform and start sharing every moment with your friends and family. </p>
+                            <p>Confirm your email address and activate your account by following this link: </p>
+                            <p><a href="https://giftogo.co/pages/business-login/?email=${email}&activation_code=${cryptotoken}">https://giftogo.co/pages/business-login/?email=${email}&activation_code=${cryptotoken}</a></p>
+                            <p class="center"><a class="button" href="https://giftogo.co/pages/business-login/?email=${email}&activation_code=${cryptotoken}">Activate Account</a></p>
                           </body>
                         </html>`;
       let emailinfo = await smtp.sendemail(textbody, email, "Giftogo Business account registration");
