@@ -7,8 +7,8 @@ const cron = require("node-cron");
 const cors = require("cors");
 const createError = require("http-errors");
 const port = parseInt(process.env.PORT, 10) || 8000;
-const emailscraper =require('./cronjobs/emailScraper');
-const processImage=require('./cronjobs/processImage');
+const emailscraper = require('./cronjobs/emailScraper');
+const processImage = require('./cronjobs/processImage');
 // var url = require('url');
 // Set up the express app
 const app = express();
@@ -33,19 +33,19 @@ app.use(logger("dev"));
 // cron.schedule("00 */1 * * * *", function() {
 //   console.log("Cron job perform a task on"+hours+minutes+seconds);
 //   emailscraper.gettokenurl();
-  
+
 // });
 
 
- //sort according to pId 
- 
+//sort according to pId 
+
 // items.sort(sortByProperty("id")); //sort according to i
 
 // console.log(items);
 
 
 // Parse incoming requests data (https://github.com/expressjs/body-parser)
-app.use(bodyParser.json({limit: '20mb'}));
+app.use(bodyParser.json({ limit: '20mb' }));
 // app.use(express.json({limit: '100mb'}));
 // app.use(express.urlencoded({limit: '100mb'}));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -59,6 +59,7 @@ app.use(require("./routes/meta.routes"));
 app.use(require("./routes/order.routes"));
 app.use(require("./routes/vendor.routes"));
 app.use(require("./routes/imageTest.routes"));
+app.use(require("./routes/customer.routes"));
 
 app.use(function (req, res, next) {
   next(createError(404));
@@ -85,4 +86,3 @@ model.sequelize
     });
   });
 
-  
