@@ -40,6 +40,7 @@ const loginVendor = async (_vendor) => {
 
 // create new user service
 const createVendor = async (_vendor) => {
+  const cryptotoken = crypto.randomBytes(16).toString('hex');
   const { email, password, company_name, website, address_line, apartment, city, province, zip_code, country, phone } = _vendor;
   try {
     let vendor = await Vendor.findAll({ where: { email }, limit: 1 });
@@ -47,7 +48,7 @@ const createVendor = async (_vendor) => {
     let website_check = await Vendor.findOne({ where: { website } });
     if (vendor.length) {
       // throw new error("Vendor Already exists", 400);
-      return { message: "Partner name already exists", response: [], status: 400 };
+      return { message: "Email already exists", response: [], status: 400 };
     }
     if (company_check) {
       // throw new error("Vendor Already exists", 400);
@@ -76,9 +77,33 @@ const createVendor = async (_vendor) => {
         shopify_collection_id: shopifyCollection.id
       });
 
-      const textbody = "<html><head><style>.button{background-color: #008CBA;border: none;color: white;padding: 15px 32px;text-align: center;text-decoration: none;display: inline-block;font-size: 16px;margin: 4px 2px;cursor: pointer;}.im {color: black;}</style></head>"
-        + "<body><h1>Giftogo</h1><h1>Welcome to Giftogo!</h1><p>You have activated your business account. Next time to login.</p><a class=" + "button button2" + " href=" + "https://giftogo.co/pages/business-login" + ">Visit your store</a></body></html>"
-
+      const textbody = `<html>
+                          <head>
+                            <style>
+                              .button{
+                                background-color: #008CBA;
+                                border: none;
+                                color: white;
+                                padding: 15px 32px;
+                                text-align: center;
+                                text-decoration: none;
+                                display: inline-block;
+                                font-size: 16px;
+                                margin: 4px 2px;
+                                cursor: pointer;
+                              }
+                              .im {
+                                color: black;
+                              }
+                            </style>
+                          </head>
+                          <body>
+                            <h1>Giftogo</h1>
+                            <h1>Welcome to Giftogo!</h1>
+                            <p>You have activated your business account. Next time to login.</p>
+                            <a class="button" href="https://giftogo.co/pages/business-login">Visit your store</a>
+                          </body>
+                        </html>`;
       let emailinfo = await smtp.sendemail(textbody, email, "Giftogo Business account registration");
 
       console.log(emailinfo);

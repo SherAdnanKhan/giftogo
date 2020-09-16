@@ -27,6 +27,21 @@ const newUser = async (req) => {
   }
 };
 
+
+const updateUser = async (req) => {
+
+  await check("first_name", "First name is required").exists().run(req);
+  await check("last_name", "Last name is required").exists().run(req);
+  await check("gender", "Gender is required").exists().run(req);
+  await check("dob", "Date of birth is required").exists().run(req);
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    throw new error(errors.array({ onlyFirstError: true }), 500);
+  }
+};
+
+
 const newVendor = async (req) => {
   await check("company_name", "Company name is required").isLength({ max: 30 }).run(req);
   await check("email", "Email is required or Invalid").isEmail().run(req);
@@ -40,6 +55,7 @@ const newVendor = async (req) => {
 
 module.exports = {
   newUser,
+  updateUser,
   signUser,
   newVendor
 };
