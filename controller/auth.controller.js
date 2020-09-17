@@ -52,24 +52,36 @@ const loginVendor = async (req, res) => {
   }
 };
 
-const forgotVendor= async (req,res)=>{
-  try{   
-  const result = await vendor_auth.forgotVendor(req.body);
-  return res.json(result);
-  }catch(e){
+const forgotVendor = async (req, res) => {
+  try {
+    const result = await vendor_auth.forgotVendor(req.body);
+    return res.json(result);
+  } catch (e) {
     console.log(e);
-    res.status(e.status).json({error: e.data});
+    res.status(e.status).json({ error: e.data });
   }
 }
 
-
-const resetPasswordVendor= async (req,res)=>{
-  try{   
-  const result = await vendor_auth.resetPasswordVendor(req.body);
-  return res.json(result);
-  }catch(e){
+//reset Vendor password
+const resetPasswordVendor = async (req, res) => {
+  try {
+    const result = await vendor_auth.resetPasswordVendor(req.body);
+    return res.json(result);
+  } catch (e) {
     console.log(e);
-    res.status(e.status).json({error: e.data});
+    res.status(e.status).json({ error: e.data });
+  }
+}
+
+//email verified users
+const accountVerification = async (req, res) => {
+  try {
+    await validator.verifyAccount(req);
+    const result = await vendor_auth.verifyAccount(req.body);
+    return res.json(result);
+  } catch (e) {
+    console.log(e);
+    res.status(e.status).json({ error: e.data });
   }
 }
 
@@ -79,5 +91,6 @@ module.exports = {
   createVendor,
   loginVendor,
   forgotVendor,
-  resetPasswordVendor
+  resetPasswordVendor,
+  accountVerification
 };
