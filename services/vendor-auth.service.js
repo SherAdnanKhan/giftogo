@@ -253,6 +253,10 @@ const verifyAccount = async (data) => {
     return { message: "Invalid Email", response: [], status: 400 }
   }
 
+  if (vendor.verified_token) {
+    return { message: "Account is already verified", response: [], status: 200 }
+  }
+
   if (vendor.verified_email == token) {
     await Vendor.update(
       {
