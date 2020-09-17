@@ -54,9 +54,15 @@ const newVendor = async (req) => {
   }
 };
 
+const verifyAccount = async (req) => {
+  await check("email", "Email is required or Invalid").isEmail().run(req);
+  await check("token", "Verify token required").exists().run(req);
+}
+
 module.exports = {
   newUser,
   updateUser,
   signUser,
-  newVendor
+  newVendor,
+  verifyAccount
 };

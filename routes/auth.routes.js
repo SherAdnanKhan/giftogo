@@ -14,7 +14,8 @@ authRouter.post("/vendor/login", auth.loginVendor);
 // create vendors
 authRouter.post("/vendor/create", auth.createVendor);
 //forget vendors
-authRouter.post("/vendor/forgot",auth.forgotVendor);
-authRouter.post("/vendor/resetpass",auth.resetPasswordVendor);
+authRouter.post("/vendor/forgot", auth.forgotVendor);
+authRouter.post("/vendor/resetpass", auth.resetPasswordVendor);
+authRouter.post("/vendor/verify", auth.accountVerification);
 
 module.exports = authRouter;
