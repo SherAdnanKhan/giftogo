@@ -25,10 +25,10 @@ const getVendorById = async (id) => {
 };
 
 const updateVendorById = async (id, _vendor) => {
-  const { password, website, address_line, apartment, city, province, zip_code, country, phone, company_desciption } = _vendor;
+  const { password, website, address_line, apartment, city, province, zip_code, country, phone, company_desciption, business_number } = _vendor;
   try {
     const vendor = await Vendor.findOne({ where: { id }, limit: 1 });
-    var web=website.toString();
+    var web = website.toString();
     console.log(web);
     console.log(url.parse(web.toString()).hostname);
     let website_check = await Vendor.findOne({ where: { website } });
@@ -52,7 +52,7 @@ const updateVendorById = async (id, _vendor) => {
     }
 
     await Vendor.update({
-      website, address_line, apartment, city, province, zip_code, country, phone, password: hash_password, company_desciption
+      website, address_line, apartment, city, province, zip_code, country, phone, password: hash_password, company_desciption, business_number
     }, { where: { id } });
 
     const collection = await shopify.customCollection.update(collectionId, {
@@ -82,26 +82,26 @@ const updateLogo = async (id, logo) => {
   }
 
 }
- function decsortByProperty(property){  
-  return function(a,b){  
-     if(a[property] < b[property])  
-        return 1;  
-     else if(a[property] > b[property])  
-        return -1;  
- 
-     return 0;  
-  }  
+function decsortByProperty(property) {
+  return function (a, b) {
+    if (a[property] < b[property])
+      return 1;
+    else if (a[property] > b[property])
+      return -1;
+
+    return 0;
+  }
 }
 
- function asssortByProperty(property){  
-  return function(a,b){  
-     if(a[property] > b[property])  
-        return 1;  
-     else if(a[property] < b[property])  
-        return -1;  
- 
-     return 0;  
-  }  
+function asssortByProperty(property) {
+  return function (a, b) {
+    if (a[property] > b[property])
+      return 1;
+    else if (a[property] < b[property])
+      return -1;
+
+    return 0;
+  }
 }
 
 const getMyProducts = async (id, params) => {
@@ -111,12 +111,12 @@ const getMyProducts = async (id, params) => {
   }
   const collection_id = vendor.shopify_collection_id;
   //const collection_id = 175982575650;
-  const { limit = 10, page = 1 ,order} = params;
-  let listParams = { limit, collection_id ,order}, productList = [];
+  const { limit = 10, page = 1, order } = params;
+  let listParams = { limit, collection_id, order }, productList = [];
   try {
     const count_products = await shopify.product.list({ collection_id });
     const count = count_products.length;
-    const pages = Math.ceil(count/limit);
+    const pages = Math.ceil(count / limit);
     do {
       const shopifyProducts = await shopify.product.list(listParams);
       productList = [...productList, ...shopifyProducts];
@@ -124,7 +124,7 @@ const getMyProducts = async (id, params) => {
     } while (listParams !== undefined);
     const products = paginate(productList, limit, page);
     return {
-      message: "Vendor Posts", response: { count, pages ,products }, status: 200
+      message: "Vendor Posts", response: { count, pages, products }, status: 200
     }
   } catch (e) {
     console.log(e);
@@ -169,22 +169,22 @@ const getMyPayouts = async (id, params) => {
       }
     }
 
-    const {limit,page} =params;
+    const { limit, page } = params;
     var newdata;
-    if(page==1){
-      const start=0;
-      const end=limit*page;
-      newdata=order_products.slice(start, end);
-      console.log("newdata",newdata);
+    if (page == 1) {
+      const start = 0;
+      const end = limit * page;
+      newdata = order_products.slice(start, end);
+      console.log("newdata", newdata);
     }
-    else{
-      const start=limit*(page-1);
-      const end=limit*page;
-      newdata=order_products.slice(start, end);
-      console.log("newdata",newdata);
+    else {
+      const start = limit * (page - 1);
+      const end = limit * page;
+      newdata = order_products.slice(start, end);
+      console.log("newdata", newdata);
     }
-    
-   
+
+
 
 
 
