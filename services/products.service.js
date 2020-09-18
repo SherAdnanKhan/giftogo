@@ -1,6 +1,6 @@
 const shopify = require("../lib/shopify");
 const paginate = require("../util/paginate.util");
-const { Vendor } = require("../models");
+const { Vendor, Product } = require("../models");
 const { error } = require("../errors");
 
 // get product by product id
@@ -17,8 +17,8 @@ const getProductById = async (productId) => {
 // fetch products list
 const productsList = async (params) => {
   console.log(params);
-  const { limit , page } = params;
-  let listParams = { limit:250},
+  const { limit, page } = params;
+  let listParams = { limit: 250 },
     productList = [];
   try {
     const count = await shopify.product.count();
@@ -59,7 +59,6 @@ const addProduct = async (_vendor_id, _product) => {
     if (!collection) {
       return { message: "Account is deleted by Shopify", response: [], status: 400 };
     }
-    console.log(description);
     let skuid = Date.parse(new Date());
     console.log(skuid);
     const product_data = {
@@ -77,11 +76,10 @@ const addProduct = async (_vendor_id, _product) => {
           inventory_management: "shopify",
           inventory_quantity: inventory
         },
-        
+
       ]
     }
 
-    console.log(product_data);
     const product = await shopify.product.create(product_data);
 
     //add collection 
@@ -89,6 +87,18 @@ const addProduct = async (_vendor_id, _product) => {
       product_id: product.id,
       collection_id: parseInt(collection_id)
     })
+
+    //add to our database
+    const _product = Product.create({
+      title,
+      body_html: description,
+      vendor_id: _vendor_id,
+      price,
+      inventory_quantity: inventory,
+      images: "",
+      shopify_product_id: product.id,
+      shopify_collection_id: shopifyCollection.id
+    });
 
     const product_detail = await shopify.product.get(product.id);
     return {
