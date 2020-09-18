@@ -97,7 +97,7 @@ const addProduct = async (_vendor_id, _product) => {
       inventory_quantity: inventory,
       images: "",
       shopify_product_id: product.id,
-      shopify_collection_id: shopifyCollection.id
+      shopify_collection_id: collection_id
     });
 
     const product_detail = await shopify.product.get(product.id);
