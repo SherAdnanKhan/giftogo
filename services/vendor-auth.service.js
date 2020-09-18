@@ -254,7 +254,7 @@ const verifyAccount = async (data) => {
   }
 
   if (vendor.verified_token) {
-    return { message: "Account is already verified", response: [], status: 200 }
+    return { message: "Account is already verified and Token is expired", response: [], status: 400 }
   }
 
   if (vendor.verified_email == token) {
