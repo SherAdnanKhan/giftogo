@@ -14,9 +14,6 @@ const updateUser = async (_user) => {
       metafield: { owner_resource: 'customers', owner_id: customer_id },
     });
 
-    console.log(metaFieldList)
-
-    // let metafields = [];
     if (dob) {
       for (data of metaFieldList) {
         if (data.key === 'dob') {
@@ -51,8 +48,10 @@ const updateUser = async (_user) => {
         first_name,
         last_name,
       }
-    } else {
+    }
+    else {
       var updateUser = {
+        id: customer_id,
         first_name,
         last_name,
         password,
@@ -60,10 +59,8 @@ const updateUser = async (_user) => {
       }
     }
 
-
     await shopify.customer.update(customer_id, updateUser);
     const shopifyCustomer = await shopify.customer.get(customer_id);
-    //const shopifyCustomer = updateUser;
     console.log("customer Update", shopifyCustomer);
     return { message: "Customer Updated", response: shopifyCustomer, status: 200 };
   } catch (e) {
