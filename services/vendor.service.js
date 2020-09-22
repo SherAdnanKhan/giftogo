@@ -135,23 +135,24 @@ const getMyProducts = async (id, params) => {
 
 const getMyPayouts = async (id, params) => {
   const vendor = await Vendor.findOne({ where: { id } });
-  let product_ids = [], order_products = [];
+  let product_ids = [], order_payouts = [];
   if (!vendor) {
     return { message: "No vendor exists", response: [], status: 400 }
   }
   const collection_id = vendor.shopify_collection_id;
-  // const collection_id = 175982575650;
+  //const collection_id = 177747296290;
   try {
     const productList = await shopify.product.list({ collection_id });
     for (product of productList) {
       product_ids.push(product.id);
     }
+
     const orders = await shopify.order.list();
     for (order of orders) {
       for (line_item of order.line_items) {
         if (product_ids.indexOf(line_item.product_id) !== -1) {
           let sales = parseFloat(line_item.price) - parseFloat(line_item.total_discount);
-          order_products.push({
+          order_payouts.push({
             "payout_date": order.processed_at,
             "status": order.financial_status,
             "fulfillments": order.fulfillments,
@@ -164,29 +165,23 @@ const getMyPayouts = async (id, params) => {
             'balance': sales
           });
         }
-
       }
     }
-
-    const { limit, page } = params;
+    console.log(order_payouts);
+    const { limit = 10, page = 1 } = params;
     var newdata;
-    if (page == 1) {
+    if (!page || page == 1) {
       const start = 0;
-      const end = limit * page;
-      newdata = order_products.slice(start, end);
+      const end = limit * 1;
+      newdata = order_payouts.slice(start, end);
       console.log("newdata", newdata);
     }
     else {
       const start = limit * (page - 1);
       const end = limit * page;
-      newdata = order_products.slice(start, end);
+      newdata = order_payouts.slice(start, end);
       console.log("newdata", newdata);
     }
-
-
-
-
-
 
     return {
       message: "Vendor Posts", response: { order_payouts: newdata }, status: 200
