@@ -139,9 +139,8 @@ const getMyPayouts = async (id, params) => {
   if (!vendor) {
     return { message: "No vendor exists", response: [], status: 400 }
   }
-  // const collection_id = vendor.shopify_collection_id;
+  const collection_id = vendor.shopify_collection_id;
   // const collection_id = 175982575650;
-  const collection_id = 177438720034;
   try {
     const productList = await shopify.product.list({ collection_id });
     for (product of productList) {
