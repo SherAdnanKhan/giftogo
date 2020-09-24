@@ -74,7 +74,8 @@ const addProduct = async (_vendor_id, _product) => {
           price: price,
           sku: skuid,
           inventory_management: "shopify",
-          inventory_quantity: inventory
+          inventory_quantity: inventory,
+          requires_shipping: false
         },
 
       ]
