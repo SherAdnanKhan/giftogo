@@ -181,8 +181,10 @@ const searchCollections = async (search) => {
       let listParams = { collection_id: vendor.shopify_collection_id };
       const shopifyVendorProducts = await shopify.product.list(listParams);
       if (shopifyVendorProducts.length != 0) {
+        const shopifyCollection = await shopify.customCollection.get(vendor.shopify_collection_id);
         let data = {
           vendor,
+          shopifyCollection,
           products: shopifyVendorProducts
         };
         _vendors_with_products.push(data);
