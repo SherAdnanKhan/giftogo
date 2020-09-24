@@ -56,10 +56,22 @@ const getPayouts = async (req, res) => {
   }
 }
 
+const getSearchByBrands = async (req, res) => {
+  try {
+    const { search } = req.params;
+    const vendors = await vendorService.searchCollections(search);
+    res.status(200).json(vendors);
+  } catch (e) {
+    console.log(e.message);
+    res.status(e.status).json({ errors: e.data });
+  }
+}
+
 module.exports = {
   getAccount,
   updateAccount,
   updateLogo,
   getProducts,
-  getPayouts
+  getPayouts,
+  getSearchByBrands
 };
