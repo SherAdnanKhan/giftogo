@@ -3,7 +3,8 @@ const bcrypt = require("bcryptjs");
 const { Vendor } = require("../models");
 const shopify = require("../lib/shopify");
 const paginate = require("../util/paginate.util");
-
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 const getVendorById = async (id) => {
   try {
@@ -82,27 +83,6 @@ const updateLogo = async (id, logo) => {
   }
 
 }
-function decsortByProperty(property) {
-  return function (a, b) {
-    if (a[property] < b[property])
-      return 1;
-    else if (a[property] > b[property])
-      return -1;
-
-    return 0;
-  }
-}
-
-function asssortByProperty(property) {
-  return function (a, b) {
-    if (a[property] > b[property])
-      return 1;
-    else if (a[property] < b[property])
-      return -1;
-
-    return 0;
-  }
-}
 
 const getMyProducts = async (id, params) => {
   const vendor = await Vendor.findOne({ where: { id } });
@@ -131,7 +111,6 @@ const getMyProducts = async (id, params) => {
     return { message: "Vendor could not get Prducts! please reload", response: [], status: 400 }
   }
 }
-
 
 const getMyPayouts = async (id, params) => {
   const vendor = await Vendor.findOne({ where: { id } });
@@ -193,10 +172,36 @@ const getMyPayouts = async (id, params) => {
 
 }
 
+const searchCollections = async (search) => {
+  var _vendors_with_products = [];
+
+  try {
+    const vendors = await Vendor.findAll({ where: { company_name: { [Op.like]: `%${search}%` } } });
+    for (vendor of vendors) {
+      let listParams = { collection_id: vendor.shopify_collection_id };
+      const shopifyVendorProducts = await shopify.product.list(listParams);
+      if (shopifyVendorProducts.length != 0) {
+        let data = {
+          vendor,
+          products: shopifyVendorProducts
+        };
+        _vendors_with_products.push(data);
+      }
+    }
+    return {
+      message: "Search Collection Posts", response: { vendors: _vendors_with_products }, status: 200
+    }
+  } catch (e) {
+    console.log(e);
+    return { message: "Unable to search please try later!", response: [], status: 400 }
+  }
+}
+
 module.exports = {
   getVendorById,
   updateVendorById,
   updateLogo,
   getMyProducts,
-  getMyPayouts
+  getMyPayouts,
+  searchCollections
 };
