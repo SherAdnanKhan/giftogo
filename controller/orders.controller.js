@@ -41,6 +41,15 @@ const masking = async (req, res) => {
   }
 };
 
+const getOrderBarCode = async (req, res) => {
+
+  const { orderId, customerId } = req.params;
+
+  const orderServiceTango = await orderService.orderMaskingTangService(orderId, customerId);
+  res.status(200).json(orderServiceTango);
+};
+
 module.exports = {
   masking,
+  getOrderBarCode
 };
